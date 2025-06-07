@@ -82,5 +82,6 @@ def simulate_combat(player, enemy):
         "player_remaining_hp": max(player_char.hp, 0),
         "enemy_remaining_hp": max(enemy_char.hp, 0),
         "turns": turns,
-        "log": log
+        "log": log,
+        "id": player["id"]
     }
