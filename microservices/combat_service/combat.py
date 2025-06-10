@@ -29,7 +29,8 @@ def simulate_combat(player, enemy):
     log = []
     turns = []
 
-    # Crear instancias
+    # Creación de instancias
+    
     player_char = Character(
         name=player["name"],
         hp=player["hp"],
@@ -45,6 +46,7 @@ def simulate_combat(player, enemy):
     )
 
     # Iniciativa: 1-3 enemigo empieza, 4-6 jugador
+
     initiative_roll = roll_die(6)
     player_turn = initiative_roll >= 4
     log.append(f"Iniciativa: {'Jugador' if player_turn else 'Enemigo'} empieza")

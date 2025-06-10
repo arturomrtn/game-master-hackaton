@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route("/combat", methods=["POST"])
 def combat():
     data = request.get_json()
-
+                                                            
     try:
         result = simulate_combat(
             player=data["player"],

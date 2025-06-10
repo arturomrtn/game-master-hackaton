@@ -1,0 +1,1184 @@
+{
+  "name": "Combat service",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://combat-service-knave-cc775ec144bb.herokuapp.com/combat",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"player\": {\n    \"id\": {{ $json[\"id\"] }},\n    \"name\": \"{{ $json[\"name\"] }}\",\n    \"hp\": {{ $json[\"hp\"] }},\n    \"attack_bonus\": {{ $json[\"attack_bonus\"] }},\n    \"defense\": {{ $json[\"defense\"] }}\n  },\n  \"enemy\": {\n    \"name\": \"Goblin\",\n    \"hd\": 2,\n    \"ac\": 13,\n    \"attack_bonus\": 1\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        976,
+        210
+      ],
+      "id": "8a1de929-513c-4312-92ab-bee5e5876888",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0b461546-bcab-4907-872d-8183f0a1094d",
+              "leftValue": "=={{ $json[\"id\"] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        316,
+        10
+      ],
+      "id": "6e09bd24-bda8-4efe-9a62-777a86440ad5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "929dad9e-eb09-454d-90fd-8479cc0b1a0d",
+              "name": "battle_result",
+              "value": "={{ $json[\"result\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "aeea5194-8186-44cb-b70b-b2a730f75041",
+              "name": "battle_log",
+              "value": "={{ $json[\"log\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "9ff77947-7d1c-42fc-8b29-1f0a3d5322f7",
+              "name": "id",
+              "value": "={{ $json[\"id\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "8017f6e1-8ff8-4f3f-840d-f814af959103",
+              "name": "hp",
+              "value": "={{ $json[\"player_remaining_hp\"] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1196,
+        210
+      ],
+      "id": "7f2e06d9-7a2e-41fd-8fa8-a481e2205146",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "tableId": "characters",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json[\"name\"] }}"
+            },
+            {
+              "fieldId": "hp",
+              "fieldValue": "12"
+            },
+            {
+              "fieldId": "max_hp",
+              "fieldValue": "12"
+            },
+            {
+              "fieldId": "attack_bonus",
+              "fieldValue": "2"
+            },
+            {
+              "fieldId": "defense",
+              "fieldValue": "14"
+            },
+            {
+              "fieldId": "strength",
+              "fieldValue": "+1"
+            },
+            {
+              "fieldId": "inventory",
+              "fieldValue": "={espada,escudo}"
+            },
+            {
+              "fieldId": "level",
+              "fieldValue": "1"
+            },
+            {
+              "fieldId": "gold",
+              "fieldValue": "0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        536,
+        335
+      ],
+      "id": "f19be609-0e03-4409-abe9-244f72ed1cf2",
+      "name": "Create a new character",
+      "credentials": {
+        "supabaseApi": {
+          "id": "tPWOWfzbg9WxCCv0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b4c7fa4f-c106-4c4e-873c-d1523ed9266e",
+              "name": "name",
+              "value": "Arturo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -100,
+        -220
+      ],
+      "id": "09c0c27d-1321-482d-a52a-b16847cfd36c",
+      "name": "Set Player Name"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "characters",
+        "limit": 1,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "name",
+              "condition": "eq",
+              "keyValue": "={{ $json[\"name\"] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -90
+      ],
+      "id": "e976f0e1-3573-41e7-8fc2-8d16cd49527e",
+      "name": "Get Player",
+      "credentials": {
+        "supabaseApi": {
+          "id": "tPWOWfzbg9WxCCv0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b60e51a7-6af6-486d-88d5-3eb736bd8fb5",
+              "name": "name",
+              "value": "={{ $json[\"name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2caa1105-014f-451a-b151-f22f568fffb6",
+              "name": "hp",
+              "value": "={{ $json[\"hp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "16487303-784e-4300-8f09-a22b94e9a0e4",
+              "name": "attack_bonus",
+              "value": "={{ $json[\"attack_bonus\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "48c1fe5a-bb92-4717-a877-13b9f6ab9198",
+              "name": "defense",
+              "value": "={{ $json[\"defense\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "577c2a50-a94f-4658-86bf-c34b3273d3fa",
+              "name": "id",
+              "value": "={{ $json[\"id\"] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        756,
+        85
+      ],
+      "id": "c08e0afc-e6e3-446e-bdd6-f7fa5319c3ed",
+      "name": "Set Player Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b60e51a7-6af6-486d-88d5-3eb736bd8fb5",
+              "name": "name",
+              "value": "={{ $json[\"name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2caa1105-014f-451a-b151-f22f568fffb6",
+              "name": "hp",
+              "value": "={{ $json[\"hp\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "16487303-784e-4300-8f09-a22b94e9a0e4",
+              "name": "attack_bonus",
+              "value": "={{ $json[\"attack_bonus\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "48c1fe5a-bb92-4717-a877-13b9f6ab9198",
+              "name": "defense",
+              "value": "={{ $json[\"defense\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "577c2a50-a94f-4658-86bf-c34b3273d3fa",
+              "name": "id",
+              "value": "={{ $json[\"id\"] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        756,
+        335
+      ],
+      "id": "dd6b5498-9da9-4d4c-ac48-29749817acfa",
+      "name": "Set Player Data1"
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "operation": "update",
+        "tableId": "characters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json[\"player_id\"] || $json[\"id\"] }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "hp",
+              "fieldValue": "={{ $json[\"hp\"] }}"
+            },
+            {
+              "fieldId": "level",
+              "fieldValue": "={{ $json[\"level\"] ? $json[\"level\"] + 1 : 2 }}"
+            },
+            {
+              "fieldId": "gold",
+              "fieldValue": "={{ $json[\"gold\"] ? $json[\"gold\"] + 50 : 50 }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1416,
+        210
+      ],
+      "id": "b607480c-2887-46e9-9c51-9f1cdfde16d2",
+      "name": "Update Character",
+      "credentials": {
+        "supabaseApi": {
+          "id": "tPWOWfzbg9WxCCv0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2ff939bc-9bfd-4cac-a775-7ad50a0bf6d6",
+              "leftValue": "delete",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        536,
+        -15
+      ],
+      "id": "f34b009c-c59c-478b-9127-db3d339c9be3",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "useCustomSchema": true,
+        "operation": "delete",
+        "tableId": "characters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json[\"id\"] }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        756,
+        -115
+      ],
+      "id": "0aebc8d4-f927-41aa-8b3b-03ee7460d557",
+      "name": "Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "tPWOWfzbg9WxCCv0",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        280,
+        -300
+      ],
+      "id": "0483f379-8ede-4796-86b8-20521d6d4331",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_Izpi42CLTXW3W9NF96oaxYHo",
+          "mode": "list",
+          "cachedResultName": "Knave Game Master"
+        },
+        "prompt": "define",
+        "text": "={{ $json[\"message\"] }}",
+        "memory": "threadId",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1600,
+        220
+      ],
+      "id": "c3874bbe-1e6d-4b87-b43e-ea00f0ca38c3",
+      "name": "OpenAI1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "emLGxNNj6Id1Fbc0",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6f5c7e7a-771c-48c4-8b7d-bd732de18742",
+              "leftValue": "={{ $json[\"output_cleaned\"] }}\n",
+              "rightValue": "crear",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -344,
+        10
+      ],
+      "id": "ac46427f-3adb-438d-a8e9-9729f789e86a",
+      "name": "If-Crear"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6f5c7e7a-771c-48c4-8b7d-bd732de18742",
+              "leftValue": "={{ $json[\"message_cleaned\"] }}",
+              "rightValue": "usar",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -380,
+        -200
+      ],
+      "id": "e8aa7838-7fe2-4116-ae0a-d97dd2f34571",
+      "name": "If-Usar",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6f5c7e7a-771c-48c4-8b7d-bd732de18742",
+              "leftValue": "={{ $json[\"output_cleaned\"] }}",
+              "rightValue": "borrar",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -340,
+        240
+      ],
+      "id": "9948d4bd-5c7f-4f83-9dfd-a781da2d28af",
+      "name": "If-Borrar"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25f4dec4-2ba1-4d77-b09d-9659c8ca8b9b",
+              "name": "name",
+              "value": "arturo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        520
+      ],
+      "id": "1bdfcb08-40df-4287-8f6e-d6c37b04f711",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "operation": "create",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "name": "Knave Game Master",
+        "instructions": "Eres un Game Master experto en el sistema Knave. Este sistema es automático y depende de tus respuestas exactas para funcionar correctamente.\n\nSigue siempre estas reglas. No improvises. No hagas narrativa. Tus respuestas activan nodos de control. Si no respetas estas instrucciones, el sistema fallará.\n\n---\n\n1. Cuando el jugador salude o diga su nombre:\n   ● Da la bienvenida\n   ● Verifica si el personaje existe usando herramientas.\n   ● Si el personaje existe, responde exactamente:\n     El personaje existe. ¿Qué deseas hacer? 1. usar 2. borrar 3. crear\n   ● Si el personaje no existe, responde:\n“El personaje no existe. ¿Deseas crearlo? Responde con crear para continuar o cancelar para salir.”\nNo aceptes respuestas como “sí” o “vale”\n\n---\n\n2. Cuando el jugador responda qué desea hacer (usar, borrar o crear), responde exactamente con UNA SOLA palabra:\n   usar\n   borrar\n   crear\n\n   ● Sin signos de puntuación\n   ● Sin repetir frases del jugador\n   ● Sin añadir texto o explicaciones\n   ● Sin comillas\n\n---\n\n3. Si el jugador crea un personaje, espera que el sistema genere sus datos. Luego confirma.\n\n4. Si el jugador borra un personaje, espera confirmación.\n\n5. Si el jugador elige usarlo, comienza una batalla. No describas la batalla. Solo da instrucciones claras y cortas.\n\n6. Después del combate, espera los resultados del sistema.\n\n7. Si gana, responde:\n   Has ganado. Tu personaje ha sido actualizado.\n\n8. Si pierde, responde:\n   Has sido derrotado. Tu personaje ha sido actualizado.\n\n---\n\n⚠️ Nunca expliques lo que haces. No uses roleplay. No añadas nombres del personaje a las opciones. Usa exactamente lo que se indica.\n\nEjemplo correcto de opciones:\n\nEl personaje existe. ¿Qué deseas hacer? 1. usar 2. borrar 3. crear\n\nEjemplo correcto de respuesta de acción:\n\nusar",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2160,
+        560
+      ],
+      "id": "e004670f-17b7-43a7-ab78-96d7e92aa854",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "emLGxNNj6Id1Fbc0",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6469c28-ebed-4301-9995-c806b4c350ef",
+              "name": "output_cleaned",
+              "value": "={{ $json[\"output\"].toLowerCase().replace(/\\n/g, \" \").trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "f7380327-83fd-4ea1-8d3c-a90bbbd4d4d5",
+              "name": "chat_id",
+              "value": "={{ $json[\"chat_id\"] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1000,
+        120
+      ],
+      "id": "828c1a5f-bab9-460e-a31d-b6ab0c671d59",
+      "name": "Cleaning Node"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2260,
+        210
+      ],
+      "id": "2c3f221d-8dce-46fa-b8b9-2e5dc7bc52e7",
+      "name": "Telegram Trigger",
+      "webhookId": "6138a3e4-ad46-4e1a-a8f1-f735d966736f",
+      "credentials": {
+        "telegramApi": {
+          "id": "m5kSGSoisgwSU94c",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json[\"chat_id\"] }}",
+        "text": "={{ $json[\"output_cleaned\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -780,
+        120
+      ],
+      "id": "fe6ffdd0-1cf2-46ed-84c6-2240e4543fd2",
+      "name": "Telegram",
+      "webhookId": "4538e5f9-a129-4942-9b1b-1793eb6a28ce",
+      "credentials": {
+        "telegramApi": {
+          "id": "m5kSGSoisgwSU94c",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1224,
+        110
+      ],
+      "id": "cfe83ec8-e1ba-4240-bd6c-91c7b7d455fa",
+      "name": "Join Chat ID",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27b3dc8f-17e3-4fa1-ba55-c777d0e21860",
+              "name": "message",
+              "value": "={{ $json[\"message\"][\"text\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "ab66622c-7181-4d4d-ba5a-0e0edb186fcf",
+              "name": "chat_id",
+              "value": "={{ $json[\"message\"][\"chat\"][\"id\"] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2040,
+        180
+      ],
+      "id": "8c009cb1-94a8-4b89-b4ad-56dc40dc357d",
+      "name": "Extract Message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0beca945-f423-4c37-977a-9c0c9e92fe87",
+              "leftValue": "={{ $json[\"message_cleaned\"] }}",
+              "rightValue": "usar",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "307d8e12-b95d-4076-84cc-5ab33556968f",
+              "leftValue": "={{ $json[\"message_cleaned\"] }}",
+              "rightValue": "crear",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "65cc6501-d7cf-433e-b734-763fb4db24ac",
+              "leftValue": "={{ $json[\"message_cleaned\"] }}",
+              "rightValue": "borrar",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -560,
+        160
+      ],
+      "id": "22235208-de90-4f2a-8f69-bac1c47d156b",
+      "name": "If-Contenido respuesta"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ae61dd21-566f-4c67-999e-513f88e6f6a9",
+              "leftValue": "={{ $json[\"message\"] }}",
+              "rightValue": "soy",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1820,
+        285
+      ],
+      "id": "8f99dee7-bef6-457f-b30e-ae4d4423b419",
+      "name": "If-Es nombre o acción"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6469c28-ebed-4301-9995-c806b4c350ef",
+              "name": "message_cleaned",
+              "value": "={{ $json[\"message\"].toLowerCase().replace(/\\n/g, \"\").replace(/\\s+/g, \"\").trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "57b39d35-aa0a-4c91-8270-1108bf566f4e",
+              "name": "chat_id",
+              "value": "={{ $json[\"chat_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1220,
+        460
+      ],
+      "id": "b5cf5485-ef15-45ec-b148-789770ffdccc",
+      "name": "Cleaning Node 2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af7c315b-7ff9-430f-ae83-6db7e409e7e7",
+              "name": "message_cleaned",
+              "value": "={{ $json[\"message_cleaned\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6712a96d-9ecb-4a74-965e-23d925430412",
+              "name": "chat_id",
+              "value": "={{ $json[\"chat_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        460
+      ],
+      "id": "3efd4b3f-a1e3-4282-af1f-c9569646ac09",
+      "name": "Extract Player Option"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a new character",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update Character",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a new character": {
+      "main": [
+        [
+          {
+            "node": "Set Player Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Player Name": {
+      "main": [
+        [
+          {
+            "node": "Get Player",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Player": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set Player Data": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Player Data1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Player Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Character": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Join Chat ID",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If-Usar": {
+      "main": [
+        [
+          {
+            "node": "Set Player Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-Borrar": {
+      "main": [
+        []
+      ]
+    },
+    "If-Crear": {
+      "main": [
+        [
+          {
+            "node": "Create a new character",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Create a new character",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Node": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "Extract Message": {
+      "main": [
+        [
+          {
+            "node": "Join Chat ID",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If-Es nombre o acción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Join Chat ID": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-Es nombre o acción": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cleaning Node 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Node 2": {
+      "main": [
+        [
+          {
+            "node": "Extract Player Option",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-Contenido respuesta": {
+      "main": [
+        [
+          {
+            "node": "If-Usar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If-Crear",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If-Borrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Player Option": {
+      "main": [
+        [
+          {
+            "node": "If-Contenido respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e6f8b697-ea78-4bf5-8f40-58f74d635b49",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "299f826ded7a13f0b615558e33baa8898dc0da61ec5092f47ed5b60250406585"
+  },
+  "id": "jO5Cz0yytVKofMjn",
+  "tags": []
+}
