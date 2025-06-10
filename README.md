@@ -6,6 +6,10 @@ Este proyecto implementa un sistema de juego de rol (tipo Knave) donde un jugado
 
 ✅ Funcionalidades implementadas
 
+- Implementación de microservice para el combate, creado en Python y desplegado en Heroku
+
+- Implementación de Agente IA de Open AI
+
 - Extracción y limpieza de mensajes desde Telegram
 
 - Identificación del jugador por nombre o chat ID
@@ -20,7 +24,7 @@ Este proyecto implementa un sistema de juego de rol (tipo Knave) donde un jugado
 
 - Devolución del resultado al jugador vía Telegram
 
-En algunas pruebas, donde añadi otro nodo de el flujo llegó hasta el final, ejecutando el combate y devolviendo el mensaje correctamente
+En algunas pruebas, donde añadi otro nodo de Telegram, el flujo llegó hasta el final, ejecutando el combate y devolviendo logs.
 
 🚧 Limitaciones actuales
 
