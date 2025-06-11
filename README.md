@@ -4,9 +4,9 @@
 
 Este proyecto implementa un sistema de juego de rol (tipo Knave) donde un jugador puede interactuar con un Game Master automatizado a través de Telegram. El flujo completo se gestiona con n8n, que se encarga de la comunicación entre el jugador, una IA basada en OpenAI, una base de datos Supabase y un microservicio de combate en Python. 
 
-Endpoint combate en producción: https://combat-service-knave-cc775ec144bb.herokuapp.com/combat
-Bot de Telegram: https://t.me/kknave_game_bot
-Video demo link: https://www.youtube.com/watch?v=ev3RCl9GF_c
+- Endpoint combate en producción: https://combat-service-knave-cc775ec144bb.herokuapp.com/combat
+- Bot de Telegram: https://t.me/kknave_game_bot
+- Video demo link: https://www.youtube.com/watch?v=ev3RCl9GF_c
 
 En la versión subida actualmente en la repo el flujo para iniciar el combate no funciona correctamente. Antes de implementar el agente IA, el flujo llegaba al combate sin problemas, después de implementar el agente y añadir más nodos y complejidad al proyecto empecé a ver como parte de la información se perdía por el camino. Luego, en algunos de los tests que hice posteriormente a la entrega del proyecto, donde añadí otro nodo de Telegram, el flujo llegaba hasta el final en ciertas ocasiones, ejecutando el combate y devolviendo logs (aunque no devolviendo todos los logs necesarios), en n8n_workflow/screenshots puede verse un screenshot de esto en una conversación con el bot.
 
